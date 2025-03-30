@@ -44,7 +44,7 @@ export default function Home() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/analyze/twitter?username=${username}`
+        `https://tweet-mood.onrender.com/analyze/twitter?username=${username}`
       );
       const data: TwitterResponse[] = await response.json();
 
