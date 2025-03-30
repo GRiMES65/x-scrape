@@ -4,25 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twitter Sentiment Analysis</title>
+    <title>Tweet Mood</title>
     <style>
         body {
+            background-color: #c9c8c8;
+            color: #333;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #c9c8c8;
-            color: #333;
         }
 
         .container {
-            width: 80%;
-            max-width: 800px;
-            margin: 0 auto;
             background: #f1f1f1;
-            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 30px;
             text-align: center;
+            width: 80%;
         }
 
         h1 {
@@ -39,14 +39,14 @@
         }
 
         .search-bar input {
-            padding: 0.8rem 1.5rem;
-            font-size: 1.1rem;
             border-radius: 30px;
             border: 2px solid #ddd;
-            width: 60%;
+            font-size: 1.1rem;
             margin-right: 10px;
             outline: none;
+            padding: 0.8rem 1.5rem;
             transition: all 0.3s ease;
+            width: 60%;
         }
 
         .search-bar input:focus {
@@ -54,13 +54,13 @@
         }
 
         .search-bar button {
-            padding: 0.8rem 1.5rem;
             background: #007bff;
-            color: white;
             border: none;
             border-radius: 30px;
+            color: white;
             cursor: pointer;
             font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
             transition: all 0.3s ease;
         }
 
@@ -77,15 +77,14 @@
         }
 
         .loading-circle {
+            animation: spin 2s linear infinite;
             border: 8px solid #c9c8c8;
             border-top: 8px solid #007bff;
             border-radius: 50%;
-            width: 50px;
             height: 50px;
             margin-left: auto;
             margin-right: auto;
-            animation: spin 2s linear infinite;
-
+            width: 50px;
         }
 
         @keyframes spin {
@@ -100,7 +99,6 @@
 
         /* Sentiment Cards */
         .sentiment-cards {
-            display: flex;
             justify-content: space-around;
             margin-top: 30px;
             display: none;
@@ -147,10 +145,10 @@
 
         .result-item {
             background-color: #f9f9f9;
-            padding: 15px;
-            margin-bottom: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            padding: 15px;
             text-align: left;
         }
 
@@ -159,10 +157,10 @@
         }
 
         .user-sentiment {
-            margin-top: 30px;
+            color: #333;
             font-size: 1.2rem;
             font-weight: bold;
-            color: #333;
+            margin-top: 30px;
         }
 
     </style>
@@ -171,12 +169,12 @@
 <body>
 
     <div class="container">
-        <h1>Twitter Sentiment Analysis</h1>
+        <h1>Tweet Mood</h1>
 
         <!-- Search Bar -->
         <div class="search-bar">
             <input type="text" id="usernameInput" placeholder="Enter Twitter handle (e.g., @NASA)">
-            <button id="searchBtn">Search</button>
+            <button id="searchBtn">Analyze</button>
         </div>
 
         <!-- Spinning Circle -->
