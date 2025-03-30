@@ -5,7 +5,7 @@ from sentiment import analyze_sentiment
 
 app = Flask(__name__)
 CORS(app, origins=[
-    "https://tweet-mood.vercel.app/"
+    "https://tweet-mood.vercel.app"
 ])
 
 DEFAULT_TWITTER_USER = "elonmusk"  # fallback username
