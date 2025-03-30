@@ -4,16 +4,10 @@ from scraper import scrape_twitter
 from sentiment import analyze_sentiment
 
 app = Flask(__name__)
-CORS(app, resources={
-    r"/*": {
-        "origins": [
-            "https://tweet-mood.vercel.app",
-            "http://localhost:3000"
-        ],
-        "methods": ["GET", "HEAD", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type"]
-    }
-}
+CORS(app, origins=[
+    "https://tweet-mood.vercel.app",
+    "http://localhost:3000"
+])
 
 DEFAULT_TWITTER_USER = "elonmusk"  # fallback username
 
