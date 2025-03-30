@@ -10,7 +10,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f4f6f9;
+            background-color: #c9c8c8;
             color: #333;
         }
 
@@ -18,7 +18,7 @@
             width: 80%;
             max-width: 800px;
             margin: 0 auto;
-            background: #fff;
+            background: #f1f1f1;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -72,16 +72,20 @@
         .loading-circle-container {
             display: none;
             margin-top: 20px;
-            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .loading-circle {
-            border: 8px solid #f3f3f3;
+            border: 8px solid #c9c8c8;
             border-top: 8px solid #007bff;
             border-radius: 50%;
             width: 50px;
             height: 50px;
+            margin-left: auto;
+            margin-right: auto;
             animation: spin 2s linear infinite;
+
         }
 
         @keyframes spin {
@@ -171,7 +175,7 @@
 
         <!-- Search Bar -->
         <div class="search-bar">
-            <input type="text" id="usernameInput" placeholder="Enter Twitter handle (e.g., @elonmusk)">
+            <input type="text" id="usernameInput" placeholder="Enter Twitter handle (e.g., @NASA)">
             <button id="searchBtn">Search</button>
         </div>
 
@@ -212,6 +216,15 @@
                 alert("Please enter a valid Twitter username.");
                 return;
             }
+
+            // Clear previous results
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('positiveCount').textContent = '0';
+            document.getElementById('neutralCount').textContent = '0';
+            document.getElementById('negativeCount').textContent = '0';
+            document.getElementById('userSentiment').textContent = '';
+            document.getElementById('userSentiment').style.display = 'none';
+
 
             // Show the loading circle while waiting for the response
             document.getElementById('loadingCircleContainer').style.display = 'block';
