@@ -13,7 +13,7 @@ def scrape_twitter(username, password):
     options.add_argument("--headless")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     wait = WebDriverWait(driver, 25)
-
+    target_handle = 'elonmusk'
     try:
         driver.get("https://twitter.com/i/flow/login")
         
@@ -30,13 +30,19 @@ def scrape_twitter(username, password):
         login_button.click()
         
         # Wait for tweets to load
-        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'article[data-testid="tweet"]')))
+        # wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'article[data-testid="tweet"]')))
         
+        # Navigate to the target profile
+        driver.get(f"https://twitter.com/{target_handle}")
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'article[data-testid="tweet"]')))
+
+
         # Get tweets
         soup = BeautifulSoup(driver.page_source, "html.parser")
         tweets = [tweet.text for tweet in soup.find_all("div", {"data-testid": "tweetText"})]
+        #tweets = scrape_twitter('your_username', 'your_password', 'elonmusk')
         
-        return tweets[:15]
+        return tweets[:2]
     except Exception as e:
         print(f"Error scraping Twitter: {str(e)}")
         return []

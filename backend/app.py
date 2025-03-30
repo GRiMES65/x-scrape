@@ -4,8 +4,8 @@ from sentiment import analyze_sentiment
 
 app = Flask(__name__)
 
-TWITTER_USERNAME = "grimes2865"
-TWITTER_PASSWORD = "abCD12><"
+TWITTER_USERNAME = "beartestar"
+TWITTER_PASSWORD = "Nm4feDGZFsS3uKN"
 INSTAGRAM_USERNAME = "your_username"
 INSTAGRAM_PASSWORD = "your_password"
 
