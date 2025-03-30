@@ -61,7 +61,7 @@ gunicorn==20.1.0
    ```bash
    cd backend
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   venv\Scripts\activate  # On Windows: venv\Scripts\activate
    ```
 
 2. Install dependencies and setup playwright:
