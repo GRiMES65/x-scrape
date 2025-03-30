@@ -72,26 +72,3 @@ def scrape_twitter(username, password):
         return []
     finally:
         driver.quit()
-
-from playwright.sync_api import sync_playwright
-
-def scrape_instagram(username, password):
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-
-        page.goto("https://www.instagram.com/accounts/login/")
-        page.wait_for_timeout(5000)
-
-        page.fill("input[name='username']", username)
-        page.fill("input[name='password']", password)
-        page.click("button[type='submit']")
-        page.wait_for_timeout(5000)
-
-        page.goto(f"https://www.instagram.com/{username}/")
-        page.wait_for_timeout(5000)
-
-        posts = page.locator("article div div div div a").all_text_contents()
-
-        browser.close()
-        return posts[:15]

@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from scraper import scrape_twitter, scrape_instagram
+from scraper import scrape_twitter
 from sentiment import analyze_sentiment
 
 app = Flask(__name__)
@@ -15,13 +15,15 @@ def twitter_analysis():
     sentiments = analyze_sentiment(tweets)
 
     # Ensure valid sentiments
-    # valid_sentiments = ['positive', 'negative', 'neutral']
+    # valid_sentiments = ["Positive", "Negative", "Neutral"]
     # sentiments = [s if s in valid_sentiments else 'Neutral' for s in sentiments]
 
+    sentiment_values = [entry['sentiment'] for entry in sentiments]
+
     # Count sentiment results
-    positive_count = sum(1 for s in sentiments if s == "Positive")
-    negative_count = sum(1 for s in sentiments if s == "Negative")
-    neutral_count = sum(1 for s in sentiments if s == "Neutral")
+    positive_count  = sum(1 for s in sentiment_values if s == "Positive")
+    negative_count  = sum(1 for s in sentiment_values if s == "Negative")
+    neutral_count   = sum(1 for s in sentiment_values if s == "Neutral")
 
     return jsonify({
         "tweets": tweets,
@@ -30,12 +32,6 @@ def twitter_analysis():
         "negative": negative_count,
         "neutral": neutral_count
     })
-
-@app.route('/analyze/instagram', methods=['GET'])
-def instagram_analysis():
-    posts = scrape_instagram(INSTAGRAM_USERNAME, INSTAGRAM_PASSWORD)
-    results = analyze_sentiment(posts)
-    return jsonify(results)
 
 if __name__ == '__main__':
     app.run(debug=True)
