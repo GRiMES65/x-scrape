@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tweet Mood</title>
+    <style>
+        body {
+            background-color: #c9c8c8;
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: #f1f1f1;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 30px;
+            text-align: center;
+            width: 80%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-bar input {
+            border-radius: 30px;
+            border: 2px solid #ddd;
+            font-size: 1.1rem;
+            margin-right: 10px;
+            outline: none;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s ease;
+            width: 60%;
+        }
+
+        .search-bar input:focus {
+            border-color: #007bff;
+        }
+
+        .search-bar button {
+            background: #007bff;
+            border: none;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.8rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background: #0056b3;
+        }
+
+        /* Spinning Circle */
+        .loading-circle-container {
+            display: none;
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .loading-circle {
+            animation: spin 2s linear infinite;
+            border: 8px solid #c9c8c8;
+            border-top: 8px solid #007bff;
+            border-radius: 50%;
+            height: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Sentiment Cards */
+        .sentiment-cards {
+            justify-content: space-around;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .sentiment-card {
+            width: 25%;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .positive-card {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+
+        .negative-card {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+
+        .neutral-card {
+            background-color: #ffeeba;
+            border: 1px solid #ffeeba;
+        }
+
+        .sentiment-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .sentiment-card p {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .result-item strong {
+            color: #007bff;
+        }
+
+        .user-sentiment {
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Tweet Mood</h1>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="usernameInput" placeholder="Enter Twitter handle (e.g., @NASA)">
+            <button id="searchBtn">Analyze</button>
+        </div>
+
+        <!-- Spinning Circle -->
+        <div class="loading-circle-container" id="loadingCircleContainer">
+            <div class="loading-circle" id="loadingCircle"></div>
+        </div>
+
+        <!-- Sentiment Cards -->
+        <div class="sentiment-cards" id="sentimentCards">
+            <div class="sentiment-card positive-card" id="positiveCard">
+                <h3>Positive</h3>
+                <p id="positiveCount">0</p>
+            </div>
+            <div class="sentiment-card neutral-card" id="neutralCard">
+                <h3>Neutral</h3>
+                <p id="neutralCount">0</p>
+            </div>
+            <div class="sentiment-card negative-card" id="negativeCard">
+                <h3>Negative</h3>
+                <p id="negativeCount">0</p>
+            </div>
+        </div>
+
+        <!-- User Sentiment -->
+        <div class="user-sentiment" id="userSentiment" style="display: none;"></div>
+
+        <!-- Results Container -->
+        <div class="results" id="resultsContainer"></div>
+    </div>
+
+    <script>
+        // Handle search and analyze button clicks
+        document.getElementById('searchBtn').addEventListener('click', async function () {
+            const username = document.getElementById('usernameInput').value.trim().replace('@', ''); // Clean username input
+
+            if (!username) {
+                alert("Please enter a valid Twitter username.");
+                return;
+            }
+
+            // Clear previous results
+            document.getElementById('resultsContainer').innerHTML = '';
+            document.getElementById('positiveCount').textContent = '0';
+            document.getElementById('neutralCount').textContent = '0';
+            document.getElementById('negativeCount').textContent = '0';
+            document.getElementById('userSentiment').textContent = '';
+            document.getElementById('userSentiment').style.display = 'none';
+
+
+            // Show the loading circle while waiting for the response
+            document.getElementById('loadingCircleContainer').style.display = 'block';
+            document.getElementById('sentimentCards').style.display = 'none';
+            document.getElementById('userSentiment').style.display = 'none';
+
+            try {
+                // Send request to the Flask API with the username
+                const response = await fetch(`http://127.0.0.1:5000/analyze/twitter?username=${username}`);
+
+                // Simulate slow loading for demonstration (can be removed later)
+                setTimeout(() => {
+                    document.getElementById('loadingCircleContainer').style.display = 'none'; // Hide loading circle
+                    document.getElementById('sentimentCards').style.display = 'flex'; // Show sentiment cards
+                }, 1000);
+
+                // Check if the response is ok (status code 200)
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Update sentiment counts
+                    document.getElementById('positiveCount').textContent = data.positive;
+                    document.getElementById('neutralCount').textContent = data.neutral;
+                    document.getElementById('negativeCount').textContent = data.negative;
+
+                    // Categorize the user's overall sentiment
+                    let overallSentiment = '';
+                    if (data.positive > data.negative && data.positive > data.neutral) {
+                        overallSentiment = 'Positive';
+                    } else if (data.negative > data.positive && data.negative > data.neutral) {
+                        overallSentiment = 'Negative';
+                    } else {
+                        overallSentiment = 'Neutral';
+                    }
+
+                    // Display the overall sentiment
+                    document.getElementById('userSentiment').textContent = `Overall sentiment: ${overallSentiment}`;
+                    document.getElementById('userSentiment').style.display = 'block';
+
+                    // Display tweets and sentiment analysis
+                    const resultsContainer = document.getElementById('resultsContainer');
+                    resultsContainer.innerHTML = ''; // Clear previous results
+
+                    data.tweets.forEach((tweet, index) => {
+                        const sentiment = data.sentiments[index];
+                        const sentimentHTML = `<div class="result-item">
+                            <strong>Tweet:</strong> ${tweet} <br>
+                            <strong>Sentiment:</strong> ${sentiment} <br>
+                        </div>`;
+                        resultsContainer.innerHTML += sentimentHTML;
+                    });
+                } else {
+                    console.error('API Response Not OK: ', response.status);
+                    throw new Error('Failed to fetch data from API');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('resultsContainer').innerText = 'Error fetching analysis. Please try again.';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
