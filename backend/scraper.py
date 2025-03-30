@@ -4,7 +4,7 @@ import random
 
 def scrape_twitter(target_username):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.chromium.launch(headless=True, args=['--no-sandbox', '--disable-setuid-sandbox'])
         page = browser.new_context(
             user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0',
             viewport={'width': 1280, 'height': 1024}
