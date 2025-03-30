@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Sentiment Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Twitter Sentiment Analysis</h1>
+        <button id="analyzeBtn">Analyze Twitter</button>
+
+        <div class="results" id="resultsContainer"></div>
+    </div>
+
+    <script>
+        document.getElementById('analyzeBtn').addEventListener('click', async function () {
+            try {
+                // Make a GET request to the Flask API
+                const response = await fetch('http://127.0.0.1:5000/analyze/twitter');
+
+                // Check if the response is ok (status code 200)
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Clear previous results
+                    const resultsContainer = document.getElementById('resultsContainer');
+                    resultsContainer.innerHTML = '';
+
+                    // Display tweets and sentiment analysis
+                    data.tweets.forEach((tweet, index) => {
+                        const sentiment = data.sentiments[index];
+                        const sentimentHTML = `<div class="result-item">
+                    <strong>Tweet:</strong> ${tweet} <br>
+                    <strong>Sentiment:</strong> ${sentiment} <br>
+                </div>`;
+                        resultsContainer.innerHTML += sentimentHTML;
+                    });
+
+                    // Display sentiment counts
+                    const countHTML = `
+                <h3>Sentiment Counts</h3>
+                <ul>
+                    <li>Positive: ${data.positive}</li>
+                    <li>Negative: ${data.negative}</li>
+                    <li>Neutral: ${data.neutral}</li>
+                </ul>
+            `;
+                    resultsContainer.innerHTML += countHTML;
+                } else {
+                    console.error('API Response Not OK: ', response.status);
+                    throw new Error('Failed to fetch data from API');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('resultsContainer').innerText = 'Error fetching analysis. Please try again.';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,8 +1,12 @@
 from flask import Flask, jsonify
 from scraper import scrape_twitter
 from sentiment import analyze_sentiment
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+
+CORS(app)
 
 TWITTER_USERNAME = "beartestar"
 TWITTER_PASSWORD = "Nm4feDGZFsS3uKN"
@@ -27,7 +31,7 @@ def twitter_analysis():
 
     return jsonify({
         "tweets": tweets,
-        "sentiments": sentiments,
+        "sentiments": sentiment_values,
         "positive": positive_count,
         "negative": negative_count,
         "neutral": neutral_count
