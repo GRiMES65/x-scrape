@@ -39,9 +39,40 @@
             margin-top: 20px;
         }
 
+        .search-bar {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .search-bar input {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: 2px solid #ccc;
+            width: 50%;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background: var(--secondary);
+        }
+
         .result-item {
             margin-bottom: 10px;
         }
+
     </style>
 </head>
 
@@ -49,16 +80,30 @@
 
     <div class="container">
         <h1>Twitter Sentiment Analysis</h1>
-        <button id="analyzeBtn">Analyze Twitter</button>
 
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="usernameInput" placeholder="Enter Twitter handle (e.g., @elonmusk)">
+            
+        </div>
+        <button id="searchBtn">Search</button>
+        <!-- Results Container -->
         <div class="results" id="resultsContainer"></div>
     </div>
 
     <script>
-        document.getElementById('analyzeBtn').addEventListener('click', async function () {
+        // Handle search and analyze button clicks
+        document.getElementById('searchBtn').addEventListener('click', async function () {
+            const username = document.getElementById('usernameInput').value.trim().replace('@', ''); // Clean username input
+
+            if (!username) {
+                alert("Please enter a valid Twitter username.");
+                return;
+            }
+
             try {
-                // Make a GET request to the Flask API
-                const response = await fetch('http://127.0.0.1:5000/analyze/twitter');
+                // Send request to the Flask API with the username
+                const response = await fetch(`http://127.0.0.1:5000/analyze/twitter?username=${username}`);
 
                 // Check if the response is ok (status code 200)
                 if (response.ok) {
@@ -72,21 +117,20 @@
                     data.tweets.forEach((tweet, index) => {
                         const sentiment = data.sentiments[index];
                         const sentimentHTML = `<div class="result-item">
-                    <strong>Tweet:</strong> ${tweet} <br>
-                    <strong>Sentiment:</strong> ${sentiment} <br>
-                </div>`;
+                            <strong>Tweet:</strong> ${tweet} <br>
+                            <strong>Sentiment:</strong> ${sentiment} <br>
+                        </div>`;
                         resultsContainer.innerHTML += sentimentHTML;
                     });
 
                     // Display sentiment counts
                     const countHTML = `
-                <h3>Sentiment Counts</h3>
-                <ul>
-                    <li>Positive: ${data.positive}</li>
-                    <li>Negative: ${data.negative}</li>
-                    <li>Neutral: ${data.neutral}</li>
-                </ul>
-            `;
+                        <h3>Sentiment Counts</h3>
+                        <ul>
+                            <li>Positive: ${data.positive}</li>
+                            <li>Negative: ${data.negative}</li>
+                            <li>Neutral: ${data.neutral}</li>
+                        </ul>`;
                     resultsContainer.innerHTML += countHTML;
                 } else {
                     console.error('API Response Not OK: ', response.status);

@@ -8,12 +8,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
 
-def scrape_twitter(username, password):
+def scrape_twitter(username, password, target):
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     wait = WebDriverWait(driver, 10)
-    target_handle = 'BillGates'
+    target_handle = target
     max_tweets = 3
 
     try:

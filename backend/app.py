@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify,  request
 from scraper import scrape_twitter
 from sentiment import analyze_sentiment
 from flask_cors import CORS
@@ -15,7 +15,13 @@ INSTAGRAM_PASSWORD = "your_password"
 
 @app.route('/analyze/twitter', methods=['GET'])
 def twitter_analysis():
-    tweets = scrape_twitter(TWITTER_USERNAME, TWITTER_PASSWORD)
+
+    username = request.args.get('username')
+
+    if not username:
+        return jsonify({"error": "Twitter username is required"}), 400
+
+    tweets = scrape_twitter(TWITTER_USERNAME, TWITTER_PASSWORD, username)
     sentiments = analyze_sentiment(tweets)
 
     # Ensure valid sentiments
